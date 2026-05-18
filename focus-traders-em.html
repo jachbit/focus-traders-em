@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Focus Traders Weekly EM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #07070f;
+  --surface:    #0d0d1a;
+  --surface2:   #12121f;
+  --surface3:   #1a1a2e;
+  --border:     #252540;
+  --border-hi:  #3a3a60;
+  --gold:       #ffd700;
+  --gold2:      #ffaa00;
+  --gold-glow:  rgba(255,215,0,0.25);
+  --green:      #00e676;
+  --green-dim:  rgba(0,230,118,0.12);
+  --red:        #ff5252;
+  --red-dim:    rgba(255,82,82,0.12);
+  --cyan:       #00e5ff;
+  --cyan-dim:   rgba(0,229,255,0.1);
+  --purple:     #c084fc;
+  --purple-dim: rgba(192,132,252,0.15);
+  --orange:     #ff9800;
+  --text:       #ffffff;
+  --text-dim:   #ffffff;
+  --text-muted: #bbbbbb;
+  --row-alt:    rgba(255,255,255,0.018);
+  --shadow-lg:  0 20px 60px rgba(0,0,0,0.8);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+  overflow-x: auto;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,215,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,215,0,0.025) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.page-wrapper {
+  position:relative;
+  z-index:1;
+  max-width:1420px;
+  margin:0 auto;
+  padding:20px 16px 60px;
+}
+
+/* ── HEADER ── */
+header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 28px;
+  background:linear-gradient(135deg,var(--surface) 0%,var(--surface3) 100%);
+  border:1px solid var(--border-hi);
+  border-radius:16px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,0.05);
+  position:relative;
+  overflow:hidden;
+}
+
+header::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent);
+}
+
+.verse-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--purple-dim);
+  border:1px solid var(--purple);
+  border-radius:20px;
+  padding:3px 12px;
+  font-size:11px;
+  color:var(--purple);
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+.header-center{text-align:center;flex:1}
+
+.main-title {
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,2.5vw,28px);
+  font-weight:900;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-shadow:0 0 30px var(--gold-glow),0 0 60px rgba(255,215,0,0.1);
+}
+
+.main-title span{color:#fff;text-shadow:0 0 20px rgba(255,255,255,0.3)}
+
+.sub-title {
+  font-size:11px;
+  color:var(--text-dim);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-top:4px;
+}
+
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+
+.live-clock {
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  color:var(--gold);
+  background:rgba(255,215,0,0.08);
+  border:1px solid rgba(255,215,0,0.2);
+  padding:4px 12px;
+  border-radius:8px;
+  letter-spacing:1px;
+}
+
+.created-tag{font-size:10px;color:var(--text-muted);letter-spacing:1px}
+
+.server-status{
+  font-size:10px;
+  padding:3px 10px;
+  border-radius:6px;
+  letter-spacing:0.5px;
+  font-weight:600;
+}
+.server-ok  {color:#00e676;background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3)}
+.server-warn{color:#ff9800;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.3)}
+.server-off {color:#aaaaaa;background:rgba(150,150,150,0.1);border:1px solid rgba(150,150,150,0.2)}
+
+/* ── CONTROLS ── */
+.controls-panel {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+  padding:18px 20px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:14px;
+}
+
+.control-group{display:flex;flex-direction:column;gap:6px}
+
+.control-label {
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+/* ── CUSTOM CALENDAR ── */
+.cal-wrapper {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:0;
+}
+
+.cal-display {
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  background:var(--surface3);
+  border:1.5px solid var(--border-hi);
+  border-right:none;
+  color:var(--gold);
+  padding:9px 14px;
+  border-radius:10px 0 0 10px;
+  cursor:pointer;
+  width:180px;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  user-select:none;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.cal-display.placeholder{color:var(--text-muted);font-family:'Inter',sans-serif;font-size:12px}
+
+.cal-display:hover,.cal-display.open {
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px var(--gold-glow);
+}
+
+.cal-icon-btn {
+  background:var(--surface3);
+  border:1.5px solid var(--border-hi);
+  border-radius:0 10px 10px 0;
+  color:var(--gold);
+  padding:9px 12px;
+  cursor:pointer;
+  font-size:15px;
+  transition:all 0.2s;
+  line-height:1;
+}
+
+.cal-icon-btn:hover{background:rgba(255,215,0,0.1);border-color:var(--gold)}
+
+.cal-popup {
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;
+  z-index:9999;
+  background:var(--surface3);
+  border:1px solid var(--border-hi);
+  border-radius:14px;
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,215,0,0.1);
+  padding:16px;
+  width:280px;
+  display:none;
+  animation:calFadeIn 0.15s ease;
+}
+
+@keyframes calFadeIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.cal-popup.open{display:block}
+
+.cal-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+  gap:6px;
+}
+
+.cal-nav-btn {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--gold);
+  border-radius:8px;
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:16px;
+  transition:all 0.15s;
+  flex-shrink:0;
+}
+
+.cal-nav-btn:hover{background:rgba(255,215,0,0.12);border-color:var(--gold)}
+
+.cal-selects{display:flex;gap:6px;flex:1;justify-content:center}
+
+.cal-select {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:7px;
+  padding:5px 8px;
+  font-size:12px;
+  font-family:'Inter',sans-serif;
+  cursor:pointer;
+  outline:none;
+  transition:border-color 0.15s;
+}
+
+.cal-select:hover,.cal-select:focus{border-color:var(--gold);color:var(--gold)}
+
+#calMonthSel{width:110px}
+#calYearSel{width:74px}
+
+.cal-weekdays {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin-bottom:4px;
+}
+
+.cal-wd {
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  padding:4px 0;
+  color:var(--text-muted);
+  text-transform:uppercase;
+}
+
+.cal-wd.is-friday{color:var(--gold)}
+
+.cal-days {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:2px;
+}
+
+.cal-day {
+  text-align:center;
+  padding:7px 4px;
+  border-radius:7px;
+  font-size:12px;
+  cursor:pointer;
+  transition:all 0.12s;
+  position:relative;
+  color:var(--text);
+  background:transparent;
+}
+
+.cal-day:hover:not(.empty):not(.other-month) {
+  background:var(--surface2);
+  color:var(--gold);
+}
+
+.cal-day.empty,.cal-day.other-month {
+  color:var(--text-muted);
+  cursor:default;
+  pointer-events:none;
+}
+
+.cal-day.is-friday {
+  color:var(--gold);
+  font-weight:600;
+}
+
+.cal-day.is-friday:hover {
+  background:rgba(255,215,0,0.12);
+  box-shadow:0 0 8px rgba(255,215,0,0.2);
+}
+
+.cal-day.selected {
+  background:var(--gold) !important;
+  color:#000 !important;
+  font-weight:700;
+  box-shadow:0 2px 12px rgba(255,215,0,0.5);
+}
+
+.cal-day.today:not(.selected)::after {
+  content:'';
+  position:absolute;
+  bottom:3px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;
+  border-radius:50%;
+  background:var(--cyan);
+}
+
+.cal-footer {
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.cal-today-btn {
+  font-size:11px;
+  background:none;
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  border-radius:6px;
+  padding:4px 10px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+
+.cal-today-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+.cal-clear-btn {
+  font-size:11px;
+  background:none;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  border-radius:6px;
+  padding:4px 10px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+
+.cal-clear-btn:hover{border-color:var(--red);color:var(--red)}
+
+.date-warn{font-size:11px;color:var(--orange);display:none;margin-top:4px}
+.date-warn.visible{display:block}
+
+.next-friday-tag {
+  font-size:11px;
+  color:var(--cyan);
+  background:var(--cyan-dim);
+  border:1px solid rgba(0,229,255,0.2);
+  padding:4px 10px;
+  border-radius:6px;
+  white-space:nowrap;
+  display:none;
+  margin-top:4px;
+}
+
+/* ── BUTTONS ── */
+button{
+  font-family:'Inter',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+  border-radius:9px;
+  padding:9px 16px;
+  transition:all 0.2s;
+  letter-spacing:0.3px;
+  white-space:nowrap;
+}
+
+.btn-group{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-left:auto}
+
+.btn-primary{
+  background:linear-gradient(135deg,#c9a800,#ffd700);
+  color:#000;
+  box-shadow:0 4px 15px rgba(255,215,0,0.3);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 25px rgba(255,215,0,0.5)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+.btn-secondary{background:var(--surface3);color:var(--text);border:1px solid var(--border-hi)}
+.btn-secondary:hover{background:var(--surface2);border-color:var(--gold);color:var(--gold)}
+
+.btn-danger{background:rgba(255,82,82,0.1);color:var(--red);border:1px solid rgba(255,82,82,0.3)}
+.btn-danger:hover{background:rgba(255,82,82,0.2);border-color:var(--red)}
+
+.btn-green{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.3)}
+.btn-green:hover{background:rgba(0,230,118,0.2);border-color:var(--green)}
+
+/* ── STATUS BAR ── */
+.status-bar {
+  padding:8px 16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--text-dim);
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
+.status-dot.fetching{background:var(--gold);animation:pulse 1s infinite}
+.status-dot.success{background:var(--green)}
+.status-dot.error{background:var(--red)}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+/* ── TABLE ── */
+.table-wrapper{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+
+.table-scroll{overflow-x:auto}
+
+table{width:100%;border-collapse:collapse;min-width:900px}
+
+thead tr{
+  background:linear-gradient(180deg,var(--surface3) 0%,var(--surface2) 100%);
+  border-bottom:2px solid var(--gold);
+}
+
+th{
+  padding:12px 10px;
+  font-family:'Orbitron',monospace;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--gold);
+  text-align:center;
+  white-space:nowrap;
+}
+
+td{padding:0;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody tr:hover{background:rgba(255,215,0,0.03)}
+
+.cell-inner{
+  padding:9px 10px;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.cell-left{justify-content:flex-start}
+
+.ticker-input {
+  font-family:'Orbitron',monospace;
+  font-size:12px;
+  font-weight:700;
+  background:transparent;
+  border:1px solid transparent;
+  color:var(--gold);
+  width:90px;
+  padding:5px 8px;
+  border-radius:7px;
+  text-align:left;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  outline:none;
+  letter-spacing:1px;
+}
+
+.ticker-input:hover{border-color:var(--border-hi);background:var(--surface3)}
+.ticker-input:focus{border-color:var(--gold);background:var(--surface3);box-shadow:0 0 0 2px var(--gold-glow)}
+
+.company-name{
+  font-size:12px;
+  color:var(--text);
+  font-style:italic;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:210px;
+}
+
+.company-placeholder{color:var(--text-muted);font-style:normal}
+
+.status-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.5px;
+  white-space:nowrap;
+}
+
+.status-idle{color:var(--text-muted)}
+.status-loading{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.3)}
+.status-ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.3)}
+.status-err{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.3)}
+.status-partial{background:rgba(255,152,0,0.1);color:var(--orange);border:1px solid rgba(255,152,0,0.3)}
+
+.btn-del-row{
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  cursor:pointer;
+  width:28px;height:28px;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  transition:all 0.15s;
+  padding:0;
+}
+
+.btn-del-row:hover{background:var(--red-dim);color:var(--red)}
+
+.section-row td{padding:0;border-bottom:1px solid var(--border)}
+
+.section-label-cell{
+  background:linear-gradient(90deg,var(--surface3) 0%,transparent 100%);
+  border-left:3px solid var(--gold);
+}
+
+.section-input{
+  font-family:'Orbitron',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+  background:transparent;
+  border:none;
+  outline:none;
+  padding:10px 14px;
+  width:140px;
+}
+
+.section-row-spacer td{padding:0;height:6px;border-bottom:none;background:var(--bg)}
+
+.spinner{
+  width:14px;height:14px;
+  border:2px solid rgba(255,215,0,0.2);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  display:inline-block;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.footer-note{
+  margin-top:20px;
+  padding:14px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-size:11px;
+  color:var(--text-muted);
+  line-height:1.7;
+}
+
+.footer-note strong{color:var(--text-dim)}
+.footer-note code{
+  background:var(--surface3);
+  padding:1px 5px;
+  border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+/* ── Editable data cells ── */
+.editable-val {
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 6px;
+  border: 1px dashed transparent;
+  display: inline-block;
+  min-width: 55px;
+  transition: all 0.15s;
+}
+.editable-val:hover {
+  border-color: rgba(255,215,0,0.5);
+  background: rgba(255,215,0,0.07);
+}
+.editable-val::after {
+  content: ' ✎';
+  font-size: 9px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  color: var(--gold);
+}
+.editable-val:hover::after { opacity: 1; }
+
+.cell-edit-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--surface3);
+  border: 1.5px solid var(--gold);
+  border-radius: 7px;
+  color: #fff;
+  padding: 4px 8px;
+  width: 105px;
+  text-align: center;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.row-animate{animation:slideIn 0.25s ease forwards}
+
+@keyframes flashGreen{0%{background:rgba(0,230,118,0.2)}100%{background:transparent}}
+.flash-green{animation:flashGreen 1s ease forwards}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- HEADER -->
+<header>
+  <div class="verse-badge">✦ Prov. 27:17</div>
+  <div class="header-center">
+    <div class="main-title">FOCUS TRADERS <span>WEEKLY EM</span></div>
+    <div class="sub-title">Expected Move Dashboard</div>
+  </div>
+  <div class="header-right">
+    <div class="live-clock" id="liveClock">--:-- -- --</div>
+    <div class="created-tag" id="createdTag"></div>
+    <div class="server-status" id="serverStatus">&#9679; checking server...</div>
+  </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="controls-panel">
+  <div class="control-group">
+    <div class="control-label">Input Friday Date</div>
+
+    <!-- Custom Calendar Widget -->
+    <div class="cal-wrapper" id="calWrapper">
+      <div class="cal-display placeholder" id="calDisplay" tabindex="0">Pick a Friday...</div>
+      <button class="cal-icon-btn" id="calIconBtn" title="Open calendar">&#128197;</button>
+
+      <div class="cal-popup" id="calPopup">
+        <div class="cal-header">
+          <button class="cal-nav-btn" id="calPrev">&#8249;</button>
+          <div class="cal-selects">
+            <select class="cal-select" id="calMonthSel"></select>
+            <select class="cal-select" id="calYearSel"></select>
+          </div>
+          <button class="cal-nav-btn" id="calNext">&#8250;</button>
+        </div>
+        <div class="cal-weekdays">
+          <div class="cal-wd">Su</div>
+          <div class="cal-wd">Mo</div>
+          <div class="cal-wd">Tu</div>
+          <div class="cal-wd">We</div>
+          <div class="cal-wd">Th</div>
+          <div class="cal-wd is-friday">Fr</div>
+          <div class="cal-wd">Sa</div>
+        </div>
+        <div class="cal-days" id="calDays"></div>
+        <div class="cal-footer">
+          <button class="cal-today-btn" id="calTodayBtn">Today</button>
+          <button class="cal-clear-btn" id="calClearBtn">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="date-warn" id="dateWarn">&#9888; Not a Friday — data may not reflect weekly close</div>
+    <div class="next-friday-tag" id="nextFridayTag">Next Expiry: <span id="nextFridayLabel">—</span></div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-primary" id="btnFetchAll">&#9889; Fetch All Data</button>
+    <button class="btn-secondary" id="btnAddRow">&#65291; Add Ticker</button>
+    <button class="btn-secondary" id="btnAddSection">&#65291; Add Section</button>
+    <button class="btn-green" id="btnExportCSV">&#8595; CSV</button>
+    <button class="btn-green" id="btnExportPDF">&#8595; PDF</button>
+    <button class="btn-danger" id="btnClearAll">&#10005; Reset</button>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar" id="statusBar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Ready — pick a Friday date then click Fetch All Data</span>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrapper">
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:42px">#</th>
+          <th style="width:140px">Date Range</th>
+          <th style="width:100px;text-align:left">Ticker</th>
+          <th style="width:220px;text-align:left">Company Name</th>
+          <th style="width:95px">EM</th>
+          <th style="width:130px">[FCP] Friday Close</th>
+          <th style="width:120px">FCP &minus; EM [Low]</th>
+          <th style="width:120px">FCP + EM [High]</th>
+          <th style="width:80px">Status</th>
+          <th style="width:44px"></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-note">
+  <strong>Data source:</strong> Yahoo Finance (unofficial API via CORS proxy) &middot;
+  <strong>EM:</strong> ATM straddle (call&nbsp;+&nbsp;put) for the next Friday expiry &middot;
+  <strong>Ticker format:</strong> use <code>^GSPC</code> for S&amp;P 500, <code>ES=F</code> for E-mini futures &middot;
+  Not financial advice.<br><br>
+  <strong>If data fetch fails:</strong> open this file through a local web server (e.g. VS Code Live Server) instead of double-clicking it — browsers may block API calls from <code>file://</code> URLs.
+</div>
+
+</div><!-- /page-wrapper -->
+
+<script>
+/* ═══════════════════════════════════════════════════
+   FOCUS TRADERS WEEKLY EM
+   ═══════════════════════════════════════════════════ */
+
+// ── Clock ─────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('liveClock').textContent =
+    new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZoneName:'short'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+const today = new Date();
+const pad = n => String(n).padStart(2,'0');
+document.getElementById('createdTag').textContent =
+  `Created ${today.getFullYear()}${pad(today.getMonth()+1)}${pad(today.getDate())}`;
+
+// ── Helpers ───────────────────────────────────────────
+function getNextFriday(d) {
+  const r = new Date(d);
+  r.setDate(r.getDate() + 7);
+  return r;
+}
+
+function fmtDate(d) {
+  return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+}
+
+function fmtDateHuman(d) {
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+function fmtISO(d) {
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+// ── Custom Calendar ────────────────────────────────────
+const MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+let calOpen   = false;
+let calYear   = today.getFullYear();
+let calMonth  = today.getMonth();
+let selectedFriday = null;
+
+// Populate month select
+const monthSel = document.getElementById('calMonthSel');
+MONTHS.forEach((m, i) => {
+  const opt = document.createElement('option');
+  opt.value = i; opt.textContent = m;
+  monthSel.appendChild(opt);
+});
+monthSel.value = calMonth;
+
+// Populate year select (10 years back, 2 years forward)
+const yearSel = document.getElementById('calYearSel');
+for (let y = today.getFullYear() - 10; y <= today.getFullYear() + 2; y++) {
+  const opt = document.createElement('option');
+  opt.value = y; opt.textContent = y;
+  yearSel.appendChild(opt);
+}
+yearSel.value = calYear;
+
+function renderCalendar() {
+  monthSel.value = calMonth;
+  yearSel.value  = calYear;
+
+  const daysEl = document.getElementById('calDays');
+  daysEl.innerHTML = '';
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const todayISO = fmtISO(today);
+  const selISO   = selectedFriday ? fmtISO(selectedFriday) : null;
+
+  // Empty slots before first day
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    daysEl.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const iso  = fmtISO(date);
+    const dow  = date.getDay();
+
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    el.textContent = d;
+
+    if (dow === 5) el.classList.add('is-friday');
+    if (iso === todayISO) el.classList.add('today');
+    if (iso === selISO)   el.classList.add('selected');
+
+    el.addEventListener('click', () => selectDate(date));
+    daysEl.appendChild(el);
+  }
+}
+
+function selectDate(date) {
+  selectedFriday = date;
+  const isFriday = date.getDay() === 5;
+
+  const display = document.getElementById('calDisplay');
+  display.textContent = fmtISO(date);
+  display.classList.remove('placeholder');
+
+  document.getElementById('dateWarn').classList.toggle('visible', !isFriday);
+
+  const nf = getNextFriday(date);
+  document.getElementById('nextFridayTag').style.display = 'block';
+  document.getElementById('nextFridayLabel').textContent = fmtDateHuman(nf);
+
+  updateAllDateRanges();
+  closeCalendar();
+  saveState();
+}
+
+function openCalendar() {
+  calOpen = true;
+  document.getElementById('calPopup').classList.add('open');
+  document.getElementById('calDisplay').classList.add('open');
+  renderCalendar();
+}
+
+function closeCalendar() {
+  calOpen = false;
+  document.getElementById('calPopup').classList.remove('open');
+  document.getElementById('calDisplay').classList.remove('open');
+}
+
+function toggleCalendar() {
+  calOpen ? closeCalendar() : openCalendar();
+}
+
+function calSetDate(isoStr) {
+  // isoStr: 'YYYY-MM-DD'
+  if (!isoStr) return;
+  const parts = isoStr.split('-');
+  const d = new Date(+parts[0], +parts[1]-1, +parts[2]);
+  calYear  = d.getFullYear();
+  calMonth = d.getMonth();
+  selectDate(d);
+}
+
+function calClear() {
+  selectedFriday = null;
+  const display = document.getElementById('calDisplay');
+  display.textContent = 'Pick a Friday...';
+  display.classList.add('placeholder');
+  document.getElementById('dateWarn').classList.remove('visible');
+  document.getElementById('nextFridayTag').style.display = 'none';
+  document.querySelectorAll('.cell-daterange').forEach(el => el.textContent = '');
+}
+
+// Calendar nav
+document.getElementById('calDisplay').addEventListener('click', toggleCalendar);
+document.getElementById('calIconBtn').addEventListener('click', toggleCalendar);
+document.getElementById('calDisplay').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCalendar(); }
+});
+
+document.getElementById('calPrev').addEventListener('click', () => {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+});
+
+document.getElementById('calNext').addEventListener('click', () => {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+});
+
+monthSel.addEventListener('change', () => { calMonth = +monthSel.value; renderCalendar(); });
+yearSel.addEventListener('change',  () => { calYear  = +yearSel.value;  renderCalendar(); });
+
+document.getElementById('calTodayBtn').addEventListener('click', () => {
+  calYear  = today.getFullYear();
+  calMonth = today.getMonth();
+  renderCalendar();
+});
+
+document.getElementById('calClearBtn').addEventListener('click', () => {
+  calClear();
+  closeCalendar();
+  saveState();
+});
+
+// Close when clicking outside
+document.addEventListener('click', e => {
+  if (calOpen && !document.getElementById('calWrapper').contains(e.target)) {
+    closeCalendar();
+  }
+});
+
+// ── Date range cells ───────────────────────────────────
+function updateAllDateRanges() {
+  if (!selectedFriday) return;
+  const nf = getNextFriday(selectedFriday);
+  const range = `${fmtDate(selectedFriday)}-${fmtDate(nf).slice(4)}`;
+  document.querySelectorAll('.cell-daterange').forEach(el => el.textContent = range);
+}
+
+// ── Status bar ─────────────────────────────────────────
+function setStatus(msg, state = 'idle') {
+  document.getElementById('statusDot').className = 'status-dot ' + state;
+  document.getElementById('statusText').innerHTML = msg;
+}
+
+// ── Table rows ─────────────────────────────────────────
+let tickerRowIndex = 0;
+
+function addSectionRow(label = 'SECTION') {
+  const tbody = document.getElementById('tableBody');
+  const spacer = document.createElement('tr');
+  spacer.className = 'section-row-spacer';
+  spacer.innerHTML = '<td colspan="10"></td>';
+  tbody.appendChild(spacer);
+
+  const tr = document.createElement('tr');
+  tr.className = 'section-row row-animate';
+  tr.dataset.type = 'section';
+  tr.innerHTML = `
+    <td colspan="4" class="section-label-cell">
+      <input class="section-input" value="${label}" spellcheck="false"
+             onchange="saveState()" placeholder="SECTION NAME">
+    </td>
+    <td colspan="5"></td>
+    <td><div class="cell-inner" style="justify-content:center">
+      <button class="btn-del-row" onclick="removeRow(this)" title="Remove">&#10005;</button>
+    </div></td>`;
+  tbody.appendChild(tr);
+}
+
+function addTickerRow(ticker='', company='', em='', fcp='', low='', high='') {
+  const tbody = document.getElementById('tableBody');
+  tickerRowIndex++;
+
+  const dateRange = selectedFriday
+    ? `${fmtDate(selectedFriday)}-${fmtDate(getNextFriday(selectedFriday)).slice(4)}`
+    : '';
+
+  const fmt = v => (v !== '' && v !== null && v !== undefined && !isNaN(v))
+    ? Number(v).toFixed(3) : (v || '');
+
+  const tr = document.createElement('tr');
+  tr.className = 'row-animate';
+  tr.dataset.type = 'ticker';
+
+  tr.innerHTML = `
+    <td><div class="cell-inner" style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px">
+      ${tickerRowIndex}
+    </div></td>
+    <td><div class="cell-inner">
+      <span class="cell-daterange" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim)">${dateRange}</span>
+    </div></td>
+    <td><div class="cell-inner cell-left">
+      <input class="ticker-input" value="${ticker}" maxlength="12" spellcheck="false"
+             placeholder="TICKER" onchange="onTickerChange(this)" oninput="this.value=this.value.toUpperCase()">
+    </div></td>
+    <td style="width:220px;text-align:left"><div class="cell-inner cell-left">
+      <span class="company-name ${company ? '' : 'company-placeholder'}">${company || '—'}</span>
+    </div></td>
+    <td><div class="cell-inner">
+      <span class="em-value editable-val" title="Click to edit" style="font-family:'JetBrains Mono',monospace;font-size:13px" onclick="startEditing(this,'#fff')">${fmt(em)||'—'}</span>
+    </div></td>
+    <td><div class="cell-inner">
+      <span class="fcp-value editable-val" title="Click to edit" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green)" onclick="startEditing(this,'var(--green)')">${fmt(fcp)||'—'}</span>
+    </div></td>
+    <td><div class="cell-inner">
+      <span class="low-value" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold2)">${fmt(low)||'—'}</span>
+    </div></td>
+    <td><div class="cell-inner">
+      <span class="high-value" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--orange)">${fmt(high)||'—'}</span>
+    </div></td>
+    <td><div class="cell-inner" style="justify-content:center">
+      <span class="status-cell"><span class="status-idle">—</span></span>
+    </div></td>
+    <td><div class="cell-inner" style="justify-content:center">
+      <button class="btn-del-row" onclick="removeRow(this)" title="Remove">&#10005;</button>
+    </div></td>`;
+
+  tbody.appendChild(tr);
+  renumberRows();
+  return tr;
+}
+
+function statusBadge(state, extra='') {
+  switch(state) {
+    case 'loading':  return `<span class="status-badge status-loading"><span class="spinner"></span></span>`;
+    case 'ok':       return `<span class="status-badge status-ok">&#10003; OK</span>`;
+    case 'partial':  return `<span class="status-badge status-partial">&#9888; ${extra||'PARTIAL'}</span>`;
+    case 'error':    return `<span class="status-badge status-err">&#10007; ERR</span>`;
+    default:         return `<span class="status-idle">—</span>`;
+  }
+}
+
+function removeRow(btn) {
+  const tr = btn.closest('tr');
+  const prev = tr.previousElementSibling;
+  tr.remove();
+  if (prev && prev.classList.contains('section-row-spacer')) prev.remove();
+  renumberRows();
+  saveState();
+}
+
+function renumberRows() {
+  let n = 0;
+  document.querySelectorAll('#tableBody tr[data-type="ticker"]').forEach(tr => {
+    n++;
+    const numCell = tr.querySelector('.cell-inner');
+    if (numCell) numCell.textContent = n;
+    tr.dataset.rowIdx = n;
+  });
+}
+
+function onTickerChange(input) {
+  const tr = input.closest('tr');
+  tr.querySelector('.company-name').textContent = '—';
+  tr.querySelector('.em-value').textContent = '—';
+  tr.querySelector('.fcp-value').textContent = '—';
+  tr.querySelector('.low-value').textContent = '—';
+  tr.querySelector('.high-value').textContent = '—';
+  tr.querySelector('.status-cell').innerHTML = statusBadge('idle');
+  saveState();
+}
+
+// ── Click-to-edit for EM and FCP cells ────────────────
+function startEditing(span, color) {
+  if (span.querySelector('.cell-edit-input')) return; // already editing
+  const cur = span.textContent.replace(' ✎','').trim();
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.step = '0.001';
+  input.min  = '0';
+  input.value = (cur === '—' || cur === 'N/A') ? '' : cur;
+  input.className = 'cell-edit-input';
+  input.style.color = color || '#fff';
+  span.innerHTML = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    const val = parseFloat(input.value);
+    span.textContent = isNaN(val) ? '—' : val.toFixed(3);
+    recalcRow(span.closest('tr'));
+  }
+  input.addEventListener('blur',    commit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter')  { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { span.textContent = cur; }
+  });
+}
+
+function recalcRow(tr) {
+  const em  = parseFloat(tr.querySelector('.em-value')?.textContent);
+  const fcp = parseFloat(tr.querySelector('.fcp-value')?.textContent);
+  const lowEl  = tr.querySelector('.low-value');
+  const highEl = tr.querySelector('.high-value');
+  if (!isNaN(em) && !isNaN(fcp)) {
+    lowEl.textContent  = (fcp - em).toFixed(3);
+    highEl.textContent = (fcp + em).toFixed(3);
+    tr.querySelector('.status-cell').innerHTML = statusBadge('ok');
+  } else {
+    lowEl.textContent  = '—';
+    highEl.textContent = '—';
+  }
+  saveState();
+}
+
+// ── Server config ──────────────────────────────────────
+const SERVER = 'http://localhost:5000';
+let serverOnline = false;
+
+async function checkServer() {
+  const el = document.getElementById('serverStatus');
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 2500);
+    const res = await fetch(`${SERVER}/api/ping`, { signal: ctrl.signal });
+    serverOnline = res.ok;
+  } catch(e) {
+    serverOnline = false;
+  }
+  el.textContent = serverOnline
+    ? '● Python server connected'
+    : '● No server — open focus_traders_server.py';
+  el.className = 'server-status ' + (serverOnline ? 'server-ok' : 'server-off');
+}
+
+// ── CORS proxy fallback ────────────────────────────────
+const PROXIES = [
+  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+];
+
+async function fetchWithProxy(url, signal) {
+  for (const fn of PROXIES) {
+    try {
+      const res = await fetch(fn(url), { signal, headers: { Accept: 'application/json' } });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data) return data;
+    } catch(e) {
+      if (e.name === 'AbortError') throw e;
+    }
+  }
+  throw new Error('All CORS proxies failed');
+}
+
+// ── FCP — tries Python server first, falls back to proxy ──
+async function fetchFCP(symbol, fridayDate, signal) {
+  const dateStr = fmtISO(fridayDate);
+
+  if (serverOnline) {
+    const res = await fetch(
+      `${SERVER}/api/quote?symbol=${encodeURIComponent(symbol)}&date=${dateStr}`,
+      { signal }
+    );
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Server error');
+    return { close: json.close, company: json.company };
+  }
+
+  // Proxy fallback
+  const daysDiff = Math.round((Date.now() - fridayDate.getTime()) / 86400000);
+  const range    = daysDiff <= 7 ? '5d' : daysDiff <= 35 ? '1mo' : '3mo';
+  const sym      = encodeURIComponent(symbol);
+  const p1       = Math.floor((fridayDate.getTime() - 7*86400000) / 1000);
+  const p2       = Math.floor((fridayDate.getTime() + 3*86400000) / 1000);
+
+  // Try range-based first (simpler), then period-based
+  const candidateUrls = [
+    `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=${range}`,
+    `https://query2.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=${range}`,
+    `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?period1=${p1}&period2=${p2}&interval=1d`,
+    `https://query2.finance.yahoo.com/v8/finance/chart/${sym}?period1=${p1}&period2=${p2}&interval=1d`,
+  ];
+
+  let result = null;
+  for (const url of candidateUrls) {
+    try {
+      const d = await fetchWithProxy(url, signal);
+      result = d?.chart?.result?.[0];
+      if (result?.timestamp?.length) break;
+    } catch(e) { if (e.name === 'AbortError') throw e; }
+  }
+  if (!result?.timestamp?.length) throw new Error('No chart data — run start_server.bat for reliable data');
+
+  const timestamps = result.timestamp || [];
+  const closes     = result.indicators?.quote?.[0]?.close || [];
+  const company    = result.meta?.longName || result.meta?.shortName || result.meta?.symbol || '';
+
+  // Match by date only: strip the time-of-day from each timestamp before comparing
+  const fridayDateOnly = new Date(fridayDate.getFullYear(), fridayDate.getMonth(), fridayDate.getDate()).getTime() / 1000;
+  let bestIdx=0, bestDiff=Infinity;
+  timestamps.forEach((ts, i) => {
+    const tsDate = Math.floor(ts / 86400) * 86400; // round to midnight UTC
+    const d = Math.abs(tsDate - fridayDateOnly);
+    if (d < bestDiff && closes[i] != null) { bestDiff=d; bestIdx=i; }
+  });
+  const close = closes[bestIdx];
+  if (close == null) throw new Error('No closing price found');
+  return { close, company };
+}
+
+// ── EM — tries Python server first, falls back to proxy ───
+// Returns { em, currentPrice, company }
+async function fetchEM(symbol, fridayDate, signal) {
+  const dateStr = fmtISO(fridayDate);
+
+  if (serverOnline) {
+    const res  = await fetch(`${SERVER}/api/em?symbol=${encodeURIComponent(symbol)}&date=${dateStr}`, { signal });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Server error');
+    return { em: json.em, currentPrice: json.current_price, company: '' };
+  }
+
+  // Proxy fallback
+  const nextFriUnix = Math.floor(getNextFriday(fridayDate).getTime() / 1000);
+  const sym = encodeURIComponent(symbol);
+  const baseUrls = [
+    `https://query1.finance.yahoo.com/v7/finance/options/${sym}`,
+    `https://query2.finance.yahoo.com/v7/finance/options/${sym}`,
+  ];
+
+  let chain = null;
+  for (const url of baseUrls) {
+    try {
+      const d = await fetchWithProxy(url, signal);
+      chain = d?.optionChain?.result?.[0];
+      if (chain) break;
+    } catch(e) { if (e.name === 'AbortError') throw e; }
+  }
+  if (!chain) throw new Error('No option chain');
+
+  const q            = chain.quote || {};
+  const currentPrice = q.regularMarketPrice || q.ask || q.bid || 0;
+  const company      = q.longName || q.shortName || '';
+  if (!currentPrice) throw new Error('No current price in options chain');
+
+  let opts = chain.options?.[0];
+  if (!opts?.calls?.length || !opts?.puts?.length) {
+    const expirations = chain.expirationDates || [];
+    let bestExp = expirations[0] ?? 0, bestDiff = Math.abs(bestExp - nextFriUnix);
+    expirations.forEach(e => { const d=Math.abs(e-nextFriUnix); if(d<bestDiff){bestDiff=d;bestExp=e;} });
+    for (const base of baseUrls) {
+      try {
+        const d = await fetchWithProxy(`${base}?date=${bestExp}`, signal);
+        opts = d?.optionChain?.result?.[0]?.options?.[0];
+        if (opts?.calls?.length && opts?.puts?.length) break;
+      } catch(e) { if (e.name === 'AbortError') throw e; }
+    }
+  }
+
+  const calls = opts?.calls || [], puts = opts?.puts || [];
+  if (!calls.length || !puts.length) throw new Error('No options data');
+  let atm=calls[0].strike, minD=Infinity;
+  calls.forEach(c => { const d=Math.abs(c.strike-currentPrice); if(d<minD){minD=d;atm=c.strike;} });
+  const aC = calls.find(c=>c.strike===atm), aP = puts.find(p=>p.strike===atm);
+  if (!aC||!aP) throw new Error('ATM not found');
+  const cP=aC.lastPrice||aC.ask||0, pP=aP.lastPrice||aP.ask||0;
+  if (cP===0&&pP===0) throw new Error('Zero option prices');
+  return { em: cP + pP, currentPrice, company };
+}
+
+// ── Fetch single row ───────────────────────────────────
+let fetchController = null;
+
+async function fetchRow(tr, signal) {
+  const symbol = tr.querySelector('.ticker-input')?.value?.trim().toUpperCase();
+  if (!symbol) return;
+
+  tr.querySelector('.status-cell').innerHTML = statusBadge('loading');
+
+  const companyEl = tr.querySelector('.company-name');
+  const emEl      = tr.querySelector('.em-value');
+  const fcpEl     = tr.querySelector('.fcp-value');
+  const lowEl     = tr.querySelector('.low-value');
+  const highEl    = tr.querySelector('.high-value');
+
+  let fcp=null, em=null, issues=[];
+
+  // Fetch EM first — options chain also gives us currentPrice + company name
+  let optionsPrice = null;
+  try {
+    const r = await fetchEM(symbol, selectedFriday, signal);
+    em = r.em;
+    optionsPrice = r.currentPrice;
+    emEl.textContent = em.toFixed(3);
+    // Use company name from options if available
+    if (r.company) { companyEl.textContent = r.company; companyEl.classList.remove('company-placeholder'); }
+  } catch(e) {
+    if (e.name === 'AbortError') throw e;
+    emEl.textContent = 'N/A';
+    issues.push('EM');
+  }
+
+  // Fetch exact historical close from chart API
+  try {
+    const r = await fetchFCP(symbol, selectedFriday, signal);
+    fcp = r.close;
+    if (r.company) { companyEl.textContent = r.company; companyEl.classList.remove('company-placeholder'); }
+    fcpEl.textContent = fcp.toFixed(3);
+  } catch(e) {
+    if (e.name === 'AbortError') throw e;
+    // Fall back to the price already in the options chain response
+    if (optionsPrice) {
+      fcp = optionsPrice;
+      fcpEl.textContent = fcp.toFixed(3);
+    } else {
+      fcpEl.textContent = 'N/A';
+      issues.push('FCP');
+    }
+  }
+
+  if (fcp !== null && em !== null) {
+    lowEl.textContent  = (fcp - em).toFixed(3);
+    highEl.textContent = (fcp + em).toFixed(3);
+    tr.querySelector('.status-cell').innerHTML = statusBadge('ok');
+    tr.querySelectorAll('td').forEach(td => { td.classList.add('flash-green'); });
+    setTimeout(() => tr.querySelectorAll('td').forEach(td => td.classList.remove('flash-green')), 1000);
+  } else {
+    lowEl.textContent  = '—';
+    highEl.textContent = '—';
+    tr.querySelector('.status-cell').innerHTML =
+      issues.length === 2 ? statusBadge('error') : statusBadge('partial', issues.join('+'));
+  }
+
+  saveState();
+}
+
+// ── Fetch all ──────────────────────────────────────────
+async function fetchAll() {
+  if (!selectedFriday) {
+    setStatus('Please select a Friday date first.', 'error');
+    return;
+  }
+  if (fetchController) fetchController.abort();
+  fetchController = new AbortController();
+  const signal = fetchController.signal;
+
+  const rows = Array.from(document.querySelectorAll('#tableBody tr[data-type="ticker"]'))
+    .filter(tr => tr.querySelector('.ticker-input')?.value?.trim());
+
+  if (!rows.length) { setStatus('No tickers to fetch.', 'idle'); return; }
+
+  document.getElementById('btnFetchAll').disabled = true;
+  setStatus(`Fetching ${rows.length} ticker(s)…`, 'fetching');
+
+  let done=0, errors=0;
+  for (const tr of rows) {
+    try {
+      await fetchRow(tr, signal);
+      done++;
+    } catch(e) {
+      if (e.name === 'AbortError') break;
+      errors++;
+    }
+    setStatus(`Fetching… ${done+errors}/${rows.length}`, 'fetching');
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  document.getElementById('btnFetchAll').disabled = false;
+  setStatus(
+    errors === 0
+      ? `✓ Done — ${done} ticker(s) updated.`
+      : `⚠ Done — ${done} OK, ${errors} failed. Check tickers or proxy.`,
+    errors === 0 ? 'success' : 'error'
+  );
+}
+
+// ── Export PDF (requires Python server) ───────────────
+async function exportPDF() {
+  if (!serverOnline) {
+    setStatus('⚠ PDF export requires the Python server. Run: python focus_traders_server.py', 'error');
+    return;
+  }
+  setStatus('Generating PDF…', 'fetching');
+
+  const rows = [];
+  document.querySelectorAll('#tableBody tr').forEach(tr => {
+    if (tr.classList.contains('section-row-spacer')) return;
+    if (tr.dataset.type === 'section') {
+      rows.push({ type:'section', label: tr.querySelector('.section-input')?.value||'' });
+    } else if (tr.dataset.type === 'ticker') {
+      const t = tr.querySelector('.ticker-input')?.value;
+      if (!t) return;
+      rows.push({
+        type:      'ticker',
+        ticker:    t,
+        dateRange: tr.querySelector('.cell-daterange')?.textContent||'',
+        company:   tr.querySelector('.company-name')?.textContent||'',
+        em:        tr.querySelector('.em-value')?.textContent||'',
+        fcp:       tr.querySelector('.fcp-value')?.textContent||'',
+        low:       tr.querySelector('.low-value')?.textContent||'',
+        high:      tr.querySelector('.high-value')?.textContent||'',
+      });
+    }
+  });
+
+  try {
+    const res = await fetch(`${SERVER}/api/export-pdf`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows, fridayDate: selectedFriday ? fmtISO(selectedFriday) : '' }),
+    });
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `FocusTradersEM_${selectedFriday ? fmtDate(selectedFriday) : 'export'}.pdf`;
+    a.click();
+    setStatus('✓ PDF downloaded.', 'success');
+  } catch(e) {
+    setStatus('✗ PDF failed: ' + e.message, 'error');
+  }
+}
+
+// ── Export CSV ─────────────────────────────────────────
+function exportCSV() {
+  const lines = [['#','Date Range','Ticker','Company','EM','FCP','Low','High']];
+  document.querySelectorAll('#tableBody tr').forEach(tr => {
+    if (tr.dataset.type === 'section') {
+      lines.push(['---', tr.querySelector('.section-input')?.value || '']);
+    } else if (tr.dataset.type === 'ticker') {
+      const t = tr.querySelector('.ticker-input')?.value;
+      if (!t) return;
+      lines.push([
+        tr.querySelector('[data-type]')?.dataset?.rowIdx || '',
+        tr.querySelector('.cell-daterange')?.textContent || '',
+        t,
+        tr.querySelector('.company-name')?.textContent || '',
+        tr.querySelector('.em-value')?.textContent || '',
+        tr.querySelector('.fcp-value')?.textContent || '',
+        tr.querySelector('.low-value')?.textContent || '',
+        tr.querySelector('.high-value')?.textContent || '',
+      ]);
+    }
+  });
+  const csv = lines.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `FocusTradersEM_${fmtDate(today)}.csv`;
+  a.click();
+}
+
+// ── Persistence ────────────────────────────────────────
+function saveState() {
+  const rows = [];
+  document.querySelectorAll('#tableBody tr').forEach(tr => {
+    if (tr.classList.contains('section-row-spacer')) return;
+    if (tr.dataset.type === 'section') {
+      rows.push({ type:'section', label: tr.querySelector('.section-input')?.value||'' });
+    } else if (tr.dataset.type === 'ticker') {
+      rows.push({
+        type:'ticker',
+        ticker:  tr.querySelector('.ticker-input')?.value||'',
+        company: tr.querySelector('.company-name')?.textContent||'',
+        em:      tr.querySelector('.em-value')?.textContent||'',
+        fcp:     tr.querySelector('.fcp-value')?.textContent||'',
+        low:     tr.querySelector('.low-value')?.textContent||'',
+        high:    tr.querySelector('.high-value')?.textContent||'',
+      });
+    }
+  });
+  try { localStorage.setItem('ft_em_state', JSON.stringify({ rows, fridayDate: selectedFriday ? fmtISO(selectedFriday) : null })); } catch(e) {}
+}
+
+// ── Default tickers ────────────────────────────────────
+const DEFAULTS = [
+  {ticker:'^SPX'},{ticker:'SPY'},{ticker:'QQQ'},
+  {section:'FUTURES'},
+  {ticker:'ES=F'},{ticker:'NQ=F'},
+  {section:''},
+  {ticker:'TSLA'},{ticker:'NVDA'},
+  {section:'LEAPS'},
+  {ticker:'BMNR'},{ticker:'BULL'},{ticker:'CNC'},{ticker:'NVO'},
+  {ticker:'SG'},{ticker:'ZETA'},{ticker:'PLTR'},{ticker:'SOFI'},
+  {ticker:'RKLB'},{ticker:'HOOD'},
+  {section:'ON RADAR'},
+  {ticker:'USAR'},{ticker:'PL'},{ticker:'INTC'},{ticker:'TECK'},
+  {ticker:'MP'},{ticker:'LULU'},{ticker:'JOBY'},{ticker:'ACHR'},
+  {section:''},
+  {ticker:''},{ticker:''},{ticker:''},
+];
+
+function initDefaultRows() {
+  DEFAULTS.forEach(r => {
+    if ('section' in r) addSectionRow(r.section);
+    else addTickerRow(r.ticker);
+  });
+}
+
+// ── Load saved state ───────────────────────────────────
+function loadState() {
+  let state = null;
+  try { state = JSON.parse(localStorage.getItem('ft_em_state')); } catch(e) {}
+
+  if (state?.fridayDate) calSetDate(state.fridayDate);
+
+  if (state?.rows?.length) {
+    state.rows.forEach(r => {
+      if (r.type === 'section') addSectionRow(r.label);
+      else addTickerRow(r.ticker, r.company, r.em, r.fcp, r.low, r.high);
+    });
+  } else {
+    initDefaultRows();
+  }
+}
+
+// ── Reset ──────────────────────────────────────────────
+function clearAll() {
+  if (!confirm('Reset all rows and data?')) return;
+  document.getElementById('tableBody').innerHTML = '';
+  tickerRowIndex = 0;
+  calClear();
+  initDefaultRows();
+  setStatus('Reset complete.', 'idle');
+  try { localStorage.removeItem('ft_em_state'); } catch(e) {}
+}
+
+// ── Wire buttons ───────────────────────────────────────
+document.getElementById('btnFetchAll').addEventListener('click', fetchAll);
+document.getElementById('btnAddRow').addEventListener('click', () => { addTickerRow(); saveState(); });
+document.getElementById('btnAddSection').addEventListener('click', () => { addSectionRow('NEW SECTION'); saveState(); });
+document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
+document.getElementById('btnExportPDF').addEventListener('click', exportPDF);
+document.getElementById('btnClearAll').addEventListener('click', clearAll);
+
+// ── Init ───────────────────────────────────────────────
+checkServer();
+loadState();
+</script>
+</body>
+</html>
