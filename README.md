@@ -1,4 +1,6 @@
 ﻿# Focus Traders Weekly EM
+# Credits to Claude Code without which this project will not be possible
+  
 
 A standalone trading dashboard for tracking weekly expected moves across 30+ tickers.
 
