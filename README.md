@@ -14,7 +14,8 @@ A standalone trading dashboard for tracking weekly expected moves across 30+ tic
 | `focus_traders_server.py` | Python backend (yfinance + Flask) |
 | `start_server.bat` | One-click launcher for the Python server |
 | `em_build.py` | Builds `data/em.json` for the online page (runs the server's own yFinance EM / FCP / MMM code) |
-| `tickers.txt` | Tickers for the online page, one per line |
+| `em_pdf.py` | The F.O.C.U.S. template PDF (from `_TEMPLATES`), used by both PDF buttons |
+| `tickers.txt` | Tickers for the online page, one per line (`## NAME` starts a PDF section) |
 | `.github/workflows/em.yml` | Runs `em_build.py` every market hour on GitHub and saves `data/em.json` |
 | `index.html` | Sends the GitHub Pages address on to `focus-traders-em.html` |
 
@@ -29,7 +30,7 @@ A standalone trading dashboard for tracking weekly expected moves across 30+ tic
 2. The numbers come from yFinance every market hour (weekdays, about 9:30 AM - 4 PM ET), run on GitHub by `em_build.py` with the same math as the server; the header shows when (e.g. "Online data (yFinance) · 2026-11-16 10:35 ET").
 3. To add or remove a ticker online, edit `tickers.txt` on GitHub; it is picked up on the next run (Actions tab → EM data → Run workflow to run it now).
 4. The last 13 Fridays' closes are kept, so the date picker works for recent Fridays; EM / +MMM are for the week the latest run covers.
-5. PDF: the ↓ PDF button opens the print box (pick Save as PDF): white, ink-saving, named `FOCUS_Traders_EM_<timestamp>`.
+5. PDF: the ↓ PDF button downloads the F.O.C.U.S. template PDF that each hourly run makes (`FOCUS_Traders_EM_<timestamp>.pdf`, the tickers.txt list and the week the run covers, with the worked math per row). Hand edits on the page are not in it; for a PDF of exactly what is on screen, use `start_server.bat` — its ↓ PDF uses the same template.
 
 ## Dependencies (auto-installed by start_server.bat)
 `pip install flask yfinance reportlab pandas numpy`

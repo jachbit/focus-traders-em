@@ -871,6 +871,10 @@ function fmtISO(d) {
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 
+function fileStamp() {
+  const n = new Date();
+  return `${n.getFullYear()}${pad(n.getMonth()+1)}${pad(n.getDate())}_${pad(n.getHours())}${pad(n.getMinutes())}${pad(n.getSeconds())}`;
+}
 function fmtTimestamp() {
   const n = new Date();
   return `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}_${pad(n.getHours())}${pad(n.getMinutes())}`;
@@ -1419,7 +1423,7 @@ async function fetchAll() {
 
 // ── Export PDF (requires Python server) ───────────────
 async function exportPDF() {
-  if (!serverOnline) { printPDF(); return; }
+  if (!serverOnline) { await downloadHourlyPDF(); return; }
   setStatus('Generating PDF…', 'fetching');
 
   const rows = [];
@@ -1454,7 +1458,7 @@ async function exportPDF() {
     const blob = await res.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `FocusTradersEM_${fmtTimestamp()}.pdf`;
+    a.download = `FOCUS_Traders_EM_${fileStamp()}.pdf`;
     a.click();
     setStatus('✓ PDF downloaded.', 'success');
   } catch(e) {
@@ -1487,7 +1491,7 @@ function exportCSV() {
   const csv = lines.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = `FocusTradersEM_${fmtTimestamp()}.csv`;
+  a.download = `FOCUS_Traders_EM_Rows_${fileStamp()}.csv`;
   a.click();
 }
 
@@ -1678,6 +1682,27 @@ function handleCSVImport(e) {
     e.target.value = '';
   };
   reader.readAsText(file);
+}
+
+// ── PDF online: the template PDF the hourly yFinance run makes (data/FOCUS_Traders_EM_latest.pdf, em_pdf.py) ──
+async function downloadHourlyPDF() {
+  setStatus('Getting the template PDF…', 'fetching');
+  try {
+    const res = await fetch('data/FOCUS_Traders_EM_latest.pdf', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const d = new Date(), z = n => String(n).padStart(2, '0');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `FOCUS_Traders_EM_${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}.pdf`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    const other = emData && selectedFriday && fmtISO(selectedFriday) !== emData.base_friday;
+    setStatus(`✓ PDF downloaded — hourly yFinance data as of ${emData?.updated_et || '?'} ET, Friday ${emData?.base_friday || '?'}, tickers.txt list` +
+      (other ? ' (not the Friday picked above; hand edits are not in it — run start_server.bat for a PDF of the screen)' : ''), 'success');
+  } catch (e) {
+    printPDF();   // no hourly PDF yet: fall back to printing the screen
+  }
 }
 
 // ── PDF without the server: browser print (white, ink-saving), timestamped name + subtitle line ──

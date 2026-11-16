@@ -329,118 +329,14 @@ def api_em():
 # ── API: Export PDF ───────────────────────────────────────────────────────────
 @app.route('/api/export-pdf', methods=['POST'])
 def api_export_pdf():
+    """PDF of the on-screen rows, from the F.O.C.U.S. PDF template (em_pdf.py, shared with the hourly online PDF)."""
+    from em_pdf import build_pdf
     body        = request.get_json(force=True) or {}
     rows        = body.get('rows', [])
-    friday_date = body.get('fridayDate', datetime.now().strftime('%Y-%m-%d'))
-
-    gold   = colors.HexColor('#B8860B')
-    dark   = colors.HexColor('#1a1a2e')
-    green  = colors.HexColor('#006400')
-    orange = colors.HexColor('#CC5500')
-    purple = colors.HexColor('#7B2D8B')
-    light  = colors.HexColor('#f5f5f0')
-    mid    = colors.HexColor('#e8e8e0')
-
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=landscape(letter),
-                            leftMargin=0.4*inch, rightMargin=0.4*inch,
-                            topMargin=0.4*inch,  bottomMargin=0.4*inch)
-
-    title_sty = ParagraphStyle('T', fontName='Helvetica-Bold', fontSize=17,
-                                textColor=dark, alignment=TA_CENTER, spaceAfter=8)
-    sub_sty   = ParagraphStyle('S', fontName='Helvetica', fontSize=9,
-                                textColor=colors.HexColor('#555555'),
-                                alignment=TA_CENTER, spaceAfter=10)
-    foot_sty  = ParagraphStyle('F', fontName='Helvetica', fontSize=7,
-                                textColor=colors.grey, alignment=TA_CENTER)
-
-    elems = [
-        Paragraph('FOCUS TRADERS  —  WEEKLY EXPECTED MOVE', title_sty),
-        Paragraph(
-            f'Friday Date: {friday_date}  ·  Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}',
-            sub_sty),
-        Spacer(1, 0.1*inch),
-    ]
-
-    hdr   = ['#', 'Date Range', 'Ticker', 'Company Name', 'EM', '+MMM', 'Friday Close Price', 'EM Low', 'EM High']
-    tdata = [hdr]
-    styles = [
-        ('BACKGROUND',    (0,0), (-1,0),  dark),
-        ('TEXTCOLOR',     (0,0), (-1,0),  colors.white),
-        ('FONTNAME',      (0,0), (-1,0),  'Helvetica-Bold'),
-        ('FONTSIZE',      (0,0), (-1,0),  9),
-        ('ALIGN',         (0,0), (-1,0),  'CENTER'),
-        ('TOPPADDING',    (0,0), (-1,0),  7),
-        ('BOTTOMPADDING', (0,0), (-1,0),  7),
-        ('LINEBELOW',     (0,0), (-1,0),  2,   gold),
-        ('FONTNAME',      (0,1), (-1,-1), 'Helvetica'),
-        ('FONTSIZE',      (0,1), (-1,-1), 8),
-        ('ALIGN',         (0,1), (-1,-1), 'CENTER'),
-        ('ALIGN',         (3,1), (3,-1),  'LEFT'),
-        ('TOPPADDING',    (0,1), (-1,-1), 5),
-        ('BOTTOMPADDING', (0,1), (-1,-1), 5),
-        ('LINEBELOW',     (0,1), (-1,-1), 0.4, colors.HexColor('#cccccc')),
-        ('ROWBACKGROUNDS',(0,1), (-1,-1), [light, mid]),
-    ]
-
-    row_n = 0
-    for r in rows:
-        if r.get('type') == 'section':
-            lbl = r.get('label', '').upper()
-            if not lbl:
-                continue
-            ri = len(tdata)
-            tdata.append([f'  {lbl}', '', '', '', '', '', '', '', ''])
-            styles += [
-                ('SPAN',          (0,ri), (-1,ri)),
-                ('BACKGROUND',    (0,ri), (-1,ri), colors.HexColor('#2a2a40')),
-                ('TEXTCOLOR',     (0,ri), (-1,ri), colors.HexColor('#FFD700')),
-                ('FONTNAME',      (0,ri), (-1,ri), 'Helvetica-Bold'),
-                ('FONTSIZE',      (0,ri), (-1,ri), 8),
-                ('ALIGN',         (0,ri), (-1,ri), 'LEFT'),
-                ('TOPPADDING',    (0,ri), (-1,ri), 4),
-                ('BOTTOMPADDING', (0,ri), (-1,ri), 4),
-            ]
-        elif r.get('type') == 'ticker' and r.get('ticker'):
-            row_n += 1
-            ri = len(tdata)
-            tdata.append([
-                str(row_n),
-                r.get('dateRange', ''),
-                r.get('ticker',    ''),
-                r.get('company',   ''),
-                r.get('em',   '—'),
-                r.get('mmm',  '—'),
-                r.get('fcp',  '—'),
-                r.get('low',  '—'),
-                r.get('high', '—'),
-            ])
-            styles += [
-                ('TEXTCOLOR', (2,ri), (2,ri), dark),
-                ('FONTNAME',  (2,ri), (2,ri), 'Helvetica-Bold'),
-                ('TEXTCOLOR', (5,ri), (5,ri), purple),
-                ('TEXTCOLOR', (6,ri), (6,ri), green),
-                ('TEXTCOLOR', (7,ri), (7,ri), colors.HexColor('#8B6914')),
-                ('TEXTCOLOR', (8,ri), (8,ri), orange),
-            ]
-
-    col_w = [0.30*inch, 1.10*inch, 0.75*inch, 2.10*inch,
-             0.80*inch, 0.75*inch, 1.0*inch, 0.90*inch, 0.90*inch]
-
-    t = Table(tdata, colWidths=col_w, repeatRows=1)
-    t.setStyle(TableStyle(styles))
-    elems.append(t)
-    elems.append(Spacer(1, 0.15*inch))
-    elems.append(Paragraph(
-        'EM: Yahoo Finance implied volatility (IV-based, matches TOS) · '
-        'MMM: auto-detected from earnings calendar · '
-        'FCP: Yahoo Finance historical close · Not financial advice.',
-        foot_sty))
-
-    doc.build(elems)
-    buf.seek(0)
-    fname = f'FocusTradersEM_{friday_date.replace("-","")}.pdf'
-    return send_file(buf, as_attachment=True, download_name=fname, mimetype='application/pdf')
+    friday_date = body.get('fridayDate', '') or datetime.now().strftime('%Y-%m-%d')
+    pdf   = build_pdf(rows, friday_date, 'live yFinance (local server)')
+    fname = f'FOCUS_Traders_EM_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
+    return send_file(io.BytesIO(pdf), as_attachment=True, download_name=fname, mimetype='application/pdf')
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

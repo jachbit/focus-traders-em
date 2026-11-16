@@ -1,5 +1,5 @@
 {
- "updated_et": "2026-11-15 23:39",
+ "updated_et": "2026-11-15 23:51",
  "base_friday": "2026-11-13",
  "fridays": [
   "2026-11-13",
@@ -46,8 +46,8 @@
  "rows": {
   "^SPX": {
    "company": "S&P 500 Index",
-   "em": 156.281,
-   "iv": 0.1974,
+   "em": 166.954,
+   "iv": 0.1886,
    "expiry": "2026-11-20",
    "atm_strike": 7560.0,
    "current_price": 7561.67,
@@ -71,7 +71,7 @@
   },
   "SPY": {
    "company": "SPDR S&P 500 ETF",
-   "em": 15.167,
+   "em": 16.957,
    "iv": 0.1921,
    "expiry": "2026-11-20",
    "atm_strike": 754.0,
@@ -96,7 +96,7 @@
   },
   "QQQ": {
    "company": "Invesco QQQ Trust",
-   "em": 24.795,
+   "em": 27.721,
    "iv": 0.3484,
    "expiry": "2026-11-20",
    "atm_strike": 680.0,
@@ -159,7 +159,7 @@
   },
   "TSLA": {
    "company": "Tesla, Inc.",
-   "em": 22.738,
+   "em": 25.422,
    "iv": 0.5566,
    "expiry": "2026-11-20",
    "atm_strike": 390.0,
@@ -184,7 +184,7 @@
   },
   "NVDA": {
    "company": "NVIDIA Corporation",
-   "em": 17.627,
+   "em": 19.707,
    "iv": 1.0339,
    "expiry": "2026-11-20",
    "atm_strike": 162.5,
@@ -209,7 +209,7 @@
   },
   "BMNR": {
    "company": "Bitmine Immersion Technologies, Inc.",
-   "em": 1.848,
+   "em": 2.066,
    "iv": 1.0039,
    "expiry": "2026-11-20",
    "atm_strike": 17.5,
@@ -234,7 +234,7 @@
   },
   "BULL": {
    "company": "Webull Corporation",
-   "em": 0.57,
+   "em": 0.637,
    "iv": 1.0508,
    "expiry": "2026-11-20",
    "atm_strike": 5.0,
@@ -259,7 +259,7 @@
   },
   "CNC": {
    "company": "Centene Corporation",
-   "em": 3.94,
+   "em": 4.405,
    "iv": 0.5281,
    "expiry": "2026-11-20",
    "atm_strike": 71.0,
@@ -284,7 +284,7 @@
   },
   "NVO": {
    "company": "Novo Nordisk A/S",
-   "em": 1.747,
+   "em": 1.953,
    "iv": 0.4009,
    "expiry": "2026-11-20",
    "atm_strike": 41.5,
@@ -309,7 +309,7 @@
   },
   "SG": {
    "company": "Sweetgreen, Inc.",
-   "em": 1.06,
+   "em": 1.185,
    "iv": 0.8262,
    "expiry": "2026-11-20",
    "atm_strike": 12.5,
@@ -334,7 +334,7 @@
   },
   "ZETA": {
    "company": "Zeta Global Holdings Corp.",
-   "em": 2.666,
+   "em": 2.981,
    "iv": 0.6948,
    "expiry": "2026-11-20",
    "atm_strike": 36.5,
@@ -359,7 +359,7 @@
   },
   "PLTR": {
    "company": "Palantir Technologies Inc.",
-   "em": 11.725,
+   "em": 13.109,
    "iv": 0.6668,
    "expiry": "2026-11-20",
    "atm_strike": 167.5,
@@ -384,7 +384,7 @@
   },
   "SOFI": {
    "company": "SoFi Technologies, Inc.",
-   "em": 0.96,
+   "em": 1.073,
    "iv": 0.5947,
    "expiry": "2026-11-20",
    "atm_strike": 15.5,
@@ -409,7 +409,7 @@
   },
   "RKLB": {
    "company": "Rocket Lab Corporation",
-   "em": 6.289,
+   "em": 7.031,
    "iv": 0.9763,
    "expiry": "2026-11-20",
    "atm_strike": 62.0,
@@ -434,7 +434,7 @@
   },
   "HOOD": {
    "company": "Robinhood Markets, Inc.",
-   "em": 6.481,
+   "em": 7.246,
    "iv": 0.7952,
    "expiry": "2026-11-20",
    "atm_strike": 78.0,
@@ -459,7 +459,7 @@
   },
   "USAR": {
    "company": "USA Rare Earth, Inc.",
-   "em": 0.986,
+   "em": 1.102,
    "iv": 1.1543,
    "expiry": "2026-11-20",
    "atm_strike": 8.0,
@@ -484,7 +484,7 @@
   },
   "PL": {
    "company": "Planet Labs PBC",
-   "em": 1.158,
+   "em": 1.294,
    "iv": 0.8008,
    "expiry": "2026-11-20",
    "atm_strike": 14.0,
@@ -509,7 +509,7 @@
   },
   "INTC": {
    "company": "Intel Corporation",
-   "em": 5.584,
+   "em": 6.243,
    "iv": 0.894,
    "expiry": "2026-11-20",
    "atm_strike": 60.0,
@@ -534,7 +534,7 @@
   },
   "TECK": {
    "company": "Teck Resources Limited",
-   "em": 3.618,
+   "em": 4.045,
    "iv": 0.5742,
    "expiry": "2026-11-20",
    "atm_strike": 60.0,
@@ -559,7 +559,7 @@
   },
   "MP": {
    "company": "MP Materials Corp.",
-   "em": 3.218,
+   "em": 3.597,
    "iv": 0.793,
    "expiry": "2026-11-20",
    "atm_strike": 39.0,
@@ -584,7 +584,7 @@
   },
   "LULU": {
    "company": "lululemon athletica inc.",
-   "em": 5.633,
+   "em": 6.297,
    "iv": 0.5093,
    "expiry": "2026-11-20",
    "atm_strike": 106.0,
@@ -609,7 +609,7 @@
   },
   "JOBY": {
    "company": "Joby Aviation, Inc.",
-   "em": 0.405,
+   "em": 0.453,
    "iv": 0.7617,
    "expiry": "2026-11-20",
    "atm_strike": 5.0,
@@ -634,7 +634,7 @@
   },
   "ACHR": {
    "company": "Archer Aviation Inc.",
-   "em": 0.399,
+   "em": 0.446,
    "iv": 0.9453,
    "expiry": "2026-11-20",
    "atm_strike": 4.0,

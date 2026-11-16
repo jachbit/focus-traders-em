@@ -13,7 +13,10 @@ online EM / MMM / Friday close are exactly what start_server.bat gives on the PC
   MMM = ATM straddle of the expiry nearest earnings, when earnings fall in that week
   FCP = Friday closing price (the last 13 Fridays are saved for the date picker)
 
-Tickers: tickers.txt (one per line, # = comment).  Run locally: python em_build.py
+Also writes data/FOCUS_Traders_EM_latest.pdf from the F.O.C.U.S. PDF template (em_pdf.py, the same
+function the local server's PDF button uses); the online PDF button downloads it with a timestamped name.
+
+Tickers: tickers.txt (one per line, "## NAME" = PDF section, other # = comment).  Run locally: python em_build.py
 """
 
 import json, pathlib, sys, time
@@ -24,6 +27,7 @@ import focus_traders_server as srv
 
 HERE    = pathlib.Path(__file__).resolve().parent
 OUT     = HERE / "data" / "em.json"
+PDF_OUT = HERE / "data" / "FOCUS_Traders_EM_latest.pdf"
 ET      = ZoneInfo("America/New_York")
 FRIDAYS = 13
 
@@ -43,6 +47,47 @@ def read_tickers():
         t = line.split("#", 1)[0].strip().upper()
         if t and t not in out:
             out.append(t)
+    return out
+
+
+def read_layout():
+    """tickers.txt in order, with "## NAME" lines as sections (for the PDF)."""
+    out = []
+    for line in (HERE / "tickers.txt").read_text(encoding="utf-8").splitlines():
+        if line.startswith("##"):
+            out.append({"type": "section", "label": line[2:].strip()})
+            continue
+        t = line.split("#", 1)[0].strip().upper()
+        if t:
+            out.append({"type": "ticker", "ticker": t})
+    return out
+
+
+def pdf_rows(layout, rows, base, run_date):
+    """Rows for em_pdf.build_pdf, with the worked math (rule 16) from the live values."""
+    nxt = base + timedelta(days=7)
+    rng = f"{base:%Y%m%d}-{nxt:%m%d}"
+    out = []
+    for item in layout:
+        if item["type"] == "section":
+            out.append(item)
+            continue
+        r = rows.get(item["ticker"], {})
+        fcp, em, mmm = r.get("fridays", {}).get(base.isoformat()), r.get("em"), r.get("mmm") or 0
+        row = {"type": "ticker", "ticker": item["ticker"], "dateRange": rng, "company": r.get("company", ""),
+               "em": f"{em:.3f}" if em is not None else "N/A", "mmm": f"{mmm:.3f}" if mmm else "—",
+               "fcp": f"{fcp:,.3f}" if fcp is not None else "N/A", "low": "—", "high": "—"}
+        if fcp is not None and em is not None:
+            tot = em + mmm
+            row["low"], row["high"] = f"{fcp - tot:,.3f}", f"{fcp + tot:,.3f}"
+            dte = max((datetime.strptime(r["expiry"], "%Y-%m-%d").date() - run_date).days, 1)
+            row["math"] = (f"EM {r['current_price']:,.2f} x IV {r['iv']:.4f} x sqrt({dte}/365) = {em:.3f} (exp {r['expiry']}"
+                           f"{', strike ' + format(r['atm_strike'], 'g') if r.get('atm_strike') else ''})"
+                           + (f"; +MMM {mmm:.3f} (earnings {r.get('earnings_date')})" if mmm else "")
+                           + f"; {fcp:,.3f} -/+ {tot:.3f} = {fcp - tot:,.3f} / {fcp + tot:,.3f}")
+        elif fcp is not None:
+            row["math"] = "No EM: no Yahoo option chain (futures: type the EM by hand on the page)"
+        out.append(row)
     return out
 
 
@@ -97,6 +142,13 @@ def main():
         "tickers":     tickers,
         "rows":        rows,
     }, indent=1), encoding="utf-8")
+    try:
+        from em_pdf import build_pdf
+        PDF_OUT.write_bytes(build_pdf(pdf_rows(read_layout(), rows, base, now_et.date()), base.isoformat(),
+                                      f"yFinance data as of {now_et:%Y-%m-%d %H:%M} ET"))
+        print(f"PDF -> {PDF_OUT}")
+    except Exception as e:
+        print(f"PDF not made: {e}")
     print(f"\n{ok} OK, {failed} with gaps -> {OUT}")
     # fail the run only if nothing came back at all (Yahoo blocked), so a few bad tickers never stop the update
     sys.exit(1 if ok == 0 else 0)

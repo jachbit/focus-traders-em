@@ -1,15 +1,17 @@
-# F.O.C.U.S. Traders Weekly EM - tickers for the online page (one per line, # = comment).
+# F.O.C.U.S. Traders Weekly EM - tickers for the online page and the hourly PDF (one per line).
 # Edit this file on GitHub to add or remove one; it is picked up on the next hourly run.
-# Indexes / ETFs
+# A line starting with "## " starts a section in the PDF; other "#" lines are comments.
 ^SPX
 SPY
 QQQ
-# Futures (Friday close only; Yahoo has no option chain for these, enter the EM by hand)
+## FUTURES
+# Friday close only: Yahoo has no option chain for these, so their EM is typed by hand on the page
 ES=F
 NQ=F
+##
 TSLA
 NVDA
-# LEAPS
+## LEAPS
 BMNR
 BULL
 CNC
@@ -20,7 +22,7 @@ PLTR
 SOFI
 RKLB
 HOOD
-# On radar
+## ON RADAR
 USAR
 PL
 INTC
