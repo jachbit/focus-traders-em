@@ -1,0 +1,41 @@
+name: EM data (yFinance)
+
+# Every hour on weekdays during US market hours (13:35-21:35 UTC covers 9:30 AM - 4 PM ET in both
+# summer and winter time), when tickers.txt / the build script change, and by hand (Run workflow).
+on:
+  schedule:
+    - cron: "35 13-21 * * 1-5"
+  push:
+    branches: [main]
+    paths: ["tickers.txt", "em_build.py", "focus_traders_server.py", ".github/workflows/em.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: em-data
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install flask yfinance reportlab pandas numpy
+      - name: Build data/em.json
+        run: python em_build.py
+      - name: Save the data file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/em.json
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -m "EM data $(TZ=America/New_York date '+%Y-%m-%d %H:%M') ET"
+          git pull --rebase
+          git push

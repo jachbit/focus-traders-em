@@ -677,6 +677,33 @@ tbody tr:hover{background:rgba(255,215,0,0.03)}
 
 @keyframes flashGreen{0%{background:rgba(0,230,118,0.2)}100%{background:transparent}}
 .flash-green{animation:flashGreen 1s ease forwards}
+.print-head{display:none}
+.print-foot{display:none}
+/* PDF (browser print, no server): white page, no fills, ink-saving */
+@media print{
+  @page{size:letter landscape;margin:0.45in 0.45in 0.55in}
+  *{background:transparent !important;box-shadow:none !important;text-shadow:none !important;animation:none !important}
+  body,.page-wrapper{background:#fff !important;color:#000 !important;padding:0 !important;margin:0 !important;max-width:none !important}
+  header,.controls-panel,.status-bar,.footer-note{display:none !important}
+  .print-head{display:block;text-align:center;margin-bottom:8px;padding-bottom:5px;border-bottom:0.5pt solid #d1d1d1}
+  .print-head .pt{font:800 18px Arial,sans-serif;color:#002b5c}
+  .print-head .ps{font:12px Arial,sans-serif;color:#002b5c;margin-top:2px}
+  .print-head .pd{font:9px Arial,sans-serif;color:#444;margin-top:3px}
+  .table-wrapper,.table-scroll{overflow:visible !important;border:none !important;max-height:none !important}
+  table{width:100% !important;border-collapse:collapse !important;font-family:Arial,sans-serif !important}
+  thead,thead tr{border:none !important}
+  th{background:#f0f0f0 !important;color:#002b5c !important;font-size:9px !important;border:0.4pt solid #d1d1d1 !important;border-bottom:0.5pt solid #d1d1d1 !important;padding:4px !important;position:static !important}
+  tr{height:auto !important}
+  td{color:#000 !important;font-size:10px !important;border:0.3pt solid #d1d1d1 !important;padding:2px 5px !important;height:auto !important;line-height:1.25 !important;vertical-align:middle !important}
+  td *{color:#000 !important;margin-top:0 !important;margin-bottom:0 !important;padding-top:0 !important;padding-bottom:0 !important;min-height:0 !important;line-height:1.25 !important}
+  .cell-daterange{white-space:nowrap !important}
+  tr:has(.ticker-input:placeholder-shown),tr:has(.section-input:placeholder-shown){display:none !important}
+  tr{break-inside:avoid}
+  th:nth-last-child(-n+2),td:nth-last-child(-n+2){display:none !important}
+  input{border:none !important;color:#000 !important;font-weight:700 !important}
+  .print-foot{display:block;text-align:center;font:8px Arial,sans-serif;color:#444;border-top:0.4pt solid #d1d1d1;margin-top:8px;padding-top:4px;line-height:1.6}
+  .print-foot b{color:#000}
+}
 </style>
 </head>
 <body>
@@ -686,6 +713,7 @@ tbody tr:hover{background:rgba(255,215,0,0.03)}
 <header>
   <div class="verse-badge">✦ Prov. 27:17</div>
   <div class="header-center">
+    <div style="font-size:12px;font-weight:700;color:#E65C00;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;">F.O.C.U.S.<sup style="font-size:9px;vertical-align:super;">&copy;</sup> &nbsp;·&nbsp; Jachbit 2026</div>
     <div class="main-title">FOCUS TRADERS <span>WEEKLY EM</span></div>
     <div class="sub-title">Expected Move Dashboard</div>
   </div>
@@ -695,6 +723,13 @@ tbody tr:hover{background:rgba(255,215,0,0.03)}
     <div class="server-status" id="serverStatus">&#9679; checking server...</div>
   </div>
 </header>
+
+<!-- PRINT TITLE (PDF only) -->
+<div class="print-head">
+  <div class="pt">F.O.C.U.S.© Traders Weekly EM</div>
+  <div class="ps">Expected Move Dashboard</div>
+  <div class="pd" id="printByline"></div>
+</div>
 
 <!-- CONTROLS -->
 <div class="controls-panel">
@@ -787,7 +822,14 @@ tbody tr:hover{background:rgba(255,215,0,0.03)}
   <strong>EM formula:</strong> Spot &times; ATM&nbsp;IV &times; &radic;(DTE/365) &middot;
   <strong>+MMM:</strong> Auto-detected from earnings calendar (ATM straddle of nearest expiry) &middot;
   <strong>Ticker format:</strong> use <code>^GSPC</code> for S&amp;P 500, <code>ES=F</code> for E-mini futures &middot;
+  <strong>Online page:</strong> no server needed — the numbers come from yFinance every market hour (data/em.json, built on GitHub); tickers are listed in tickers.txt &middot;
   Not financial advice.
+</div>
+
+<div class="print-foot">
+  F.O.C.U.S.&copy; &nbsp;|&nbsp; Jachbit 2026 &nbsp;|&nbsp; Traders Weekly EM &nbsp;|&nbsp; EM = Spot &times; ATM IV &times; &radic;(DTE/365) &nbsp;|&nbsp; +MMM = ATM straddle on earnings weeks<br>
+  <b>John 3:16 &nbsp;|&nbsp; 1 John 3:16 &nbsp;|&nbsp; Matt 6:33 &nbsp;|&nbsp; Jer 33:3 &nbsp;|&nbsp; Prov 3:5-6 &nbsp;|&nbsp; Prov 27:17</b><br>
+  &copy; 2026 Jachbit. All rights reserved. May not be copied or shared without express written consent of the publisher. &nbsp;linktr.ee/jachbit
 </div>
 
 </div><!-- /page-wrapper -->
@@ -1191,33 +1233,33 @@ async function checkServer() {
   } catch(e) {
     serverOnline = false;
   }
+  if (!serverOnline) await loadEmData();
   el.textContent = serverOnline
     ? '● Python server connected'
-    : '● No server — open focus_traders_server.py';
-  el.className = 'server-status ' + (serverOnline ? 'server-ok' : 'server-off');
+    : emData ? `● Online data (yFinance) · ${emData.updated_et} ET`
+             : '● No server — open focus_traders_server.py';
+  el.className = 'server-status ' + (serverOnline || emData ? 'server-ok' : 'server-off');
+  el.title = serverOnline ? 'Live yFinance numbers from the local Python server'
+    : emData ? 'No local server: numbers come from data/em.json, made by yFinance every market hour on GitHub (same math as the server)' : '';
 }
 
-// ── CORS proxy fallback ────────────────────────────────
-const PROXIES = [
-  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-];
-
-async function fetchWithProxy(url, signal) {
-  for (const fn of PROXIES) {
-    try {
-      const res = await fetch(fn(url), { signal, headers: { Accept: 'application/json' } });
-      if (!res.ok) continue;
-      const data = await res.json();
-      if (data) return data;
-    } catch(e) {
-      if (e.name === 'AbortError') throw e;
-    }
-  }
-  throw new Error('All CORS proxies failed');
+// ── Online data (GitHub Pages): data/em.json, built hourly by em_build.py in GitHub Actions ──
+let emData = null;
+async function loadEmData() {
+  try {
+    const res = await fetch('data/em.json', { cache: 'no-cache' });
+    if (res.ok) emData = await res.json();
+  } catch(e) { emData = null; }
+  return emData;
+}
+function emDataRow(symbol) {
+  if (!emData) throw new Error('No server and no online data');
+  const row = emData.rows?.[symbol];
+  if (!row) throw new Error(`${symbol} is not in the online list — add it to tickers.txt`);
+  return row;
 }
 
-// ── FCP — tries Python server first, falls back to proxy ──
+// ── FCP — tries Python server first, falls back to the online data file ──
 async function fetchFCP(symbol, fridayDate, signal) {
   const dateStr = fmtISO(fridayDate);
 
@@ -1231,49 +1273,14 @@ async function fetchFCP(symbol, fridayDate, signal) {
     return { close: json.close, company: json.company };
   }
 
-  // Proxy fallback
-  const daysDiff = Math.round((Date.now() - fridayDate.getTime()) / 86400000);
-  const range    = daysDiff <= 7 ? '5d' : daysDiff <= 35 ? '1mo' : '3mo';
-  const sym      = encodeURIComponent(symbol);
-  const p1       = Math.floor((fridayDate.getTime() - 7*86400000) / 1000);
-  const p2       = Math.floor((fridayDate.getTime() + 3*86400000) / 1000);
-
-  // Try range-based first (simpler), then period-based
-  const candidateUrls = [
-    `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=${range}`,
-    `https://query2.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=${range}`,
-    `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?period1=${p1}&period2=${p2}&interval=1d`,
-    `https://query2.finance.yahoo.com/v8/finance/chart/${sym}?period1=${p1}&period2=${p2}&interval=1d`,
-  ];
-
-  let result = null;
-  for (const url of candidateUrls) {
-    try {
-      const d = await fetchWithProxy(url, signal);
-      result = d?.chart?.result?.[0];
-      if (result?.timestamp?.length) break;
-    } catch(e) { if (e.name === 'AbortError') throw e; }
-  }
-  if (!result?.timestamp?.length) throw new Error('No chart data — run start_server.bat for reliable data');
-
-  const timestamps = result.timestamp || [];
-  const closes     = result.indicators?.quote?.[0]?.close || [];
-  const company    = result.meta?.longName || result.meta?.shortName || result.meta?.symbol || '';
-
-  // Match by date only: strip the time-of-day from each timestamp before comparing
-  const fridayDateOnly = new Date(fridayDate.getFullYear(), fridayDate.getMonth(), fridayDate.getDate()).getTime() / 1000;
-  let bestIdx=0, bestDiff=Infinity;
-  timestamps.forEach((ts, i) => {
-    const tsDate = Math.floor(ts / 86400) * 86400; // round to midnight UTC
-    const d = Math.abs(tsDate - fridayDateOnly);
-    if (d < bestDiff && closes[i] != null) { bestDiff=d; bestIdx=i; }
-  });
-  const close = closes[bestIdx];
-  if (close == null) throw new Error('No closing price found');
-  return { close, company };
+  // Online data fallback: the last 13 Friday closes are saved
+  const row   = emDataRow(symbol);
+  const close = row.fridays?.[dateStr];
+  if (close == null) throw new Error(`No saved close for ${dateStr} (online data keeps the last 13 Fridays)`);
+  return { close, company: row.company || symbol };
 }
 
-// ── EM — tries Python server first, falls back to proxy ───
+// ── EM — tries Python server first, falls back to the online data file ───
 // Returns { em, currentPrice, company, source, mmm, earnings_date }
 async function fetchEM(symbol, fridayDate, signal) {
   const dateStr = fmtISO(fridayDate);
@@ -1286,52 +1293,11 @@ async function fetchEM(symbol, fridayDate, signal) {
              source: json.source || 'yfinance', mmm: json.mmm || 0, earnings_date: json.earnings_date || null };
   }
 
-  // Proxy fallback
-  const nextFriUnix = Math.floor(getNextFriday(fridayDate).getTime() / 1000);
-  const sym = encodeURIComponent(symbol);
-  const baseUrls = [
-    `https://query1.finance.yahoo.com/v7/finance/options/${sym}`,
-    `https://query2.finance.yahoo.com/v7/finance/options/${sym}`,
-  ];
-
-  let chain = null;
-  for (const url of baseUrls) {
-    try {
-      const d = await fetchWithProxy(url, signal);
-      chain = d?.optionChain?.result?.[0];
-      if (chain) break;
-    } catch(e) { if (e.name === 'AbortError') throw e; }
-  }
-  if (!chain) throw new Error('No option chain');
-
-  const q            = chain.quote || {};
-  const currentPrice = q.regularMarketPrice || q.ask || q.bid || 0;
-  const company      = q.longName || q.shortName || '';
-  if (!currentPrice) throw new Error('No current price in options chain');
-
-  let opts = chain.options?.[0];
-  if (!opts?.calls?.length || !opts?.puts?.length) {
-    const expirations = chain.expirationDates || [];
-    let bestExp = expirations[0] ?? 0, bestDiff = Math.abs(bestExp - nextFriUnix);
-    expirations.forEach(e => { const d=Math.abs(e-nextFriUnix); if(d<bestDiff){bestDiff=d;bestExp=e;} });
-    for (const base of baseUrls) {
-      try {
-        const d = await fetchWithProxy(`${base}?date=${bestExp}`, signal);
-        opts = d?.optionChain?.result?.[0]?.options?.[0];
-        if (opts?.calls?.length && opts?.puts?.length) break;
-      } catch(e) { if (e.name === 'AbortError') throw e; }
-    }
-  }
-
-  const calls = opts?.calls || [], puts = opts?.puts || [];
-  if (!calls.length || !puts.length) throw new Error('No options data');
-  let atm=calls[0].strike, minD=Infinity;
-  calls.forEach(c => { const d=Math.abs(c.strike-currentPrice); if(d<minD){minD=d;atm=c.strike;} });
-  const aC = calls.find(c=>c.strike===atm), aP = puts.find(p=>p.strike===atm);
-  if (!aC||!aP) throw new Error('ATM not found');
-  const cP=aC.lastPrice||aC.ask||0, pP=aP.lastPrice||aP.ask||0;
-  if (cP===0&&pP===0) throw new Error('Zero option prices');
-  return { em: cP + pP, currentPrice, company };
+  // Online data fallback: EM / MMM from the latest hourly yFinance run (week of emData.base_friday)
+  const row = emDataRow(symbol);
+  if (row.em == null) throw new Error(row.em_error || 'No EM in the online data');
+  return { em: row.em, currentPrice: row.current_price, company: row.company || '',
+           source: 'yfinance', mmm: row.mmm || 0, earnings_date: row.earnings_date || null };
 }
 
 // ── Fetch single row ───────────────────────────────────
@@ -1453,10 +1419,7 @@ async function fetchAll() {
 
 // ── Export PDF (requires Python server) ───────────────
 async function exportPDF() {
-  if (!serverOnline) {
-    setStatus('⚠ PDF export requires the Python server. Run: python focus_traders_server.py', 'error');
-    return;
-  }
+  if (!serverOnline) { printPDF(); return; }
   setStatus('Generating PDF…', 'fetching');
 
   const rows = [];
@@ -1717,6 +1680,22 @@ function handleCSVImport(e) {
   reader.readAsText(file);
 }
 
+// ── PDF without the server: browser print (white, ink-saving), timestamped name + subtitle line ──
+function printPDF() {
+  const d = new Date(), z = n => String(n).padStart(2, '0');
+  const stamp = `${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}`;
+  const tickers = Array.from(document.querySelectorAll('#tableBody .ticker-input')).map(i => i.value.trim()).filter(Boolean);
+  document.getElementById('printByline').textContent =
+    `Jachbit 2026 · ${d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })} · ${tickers.length} rows · ` +
+    `Friday ${selectedFriday ? fmtDateHuman(selectedFriday) : '—'}` +
+    (emData && !serverOnline ? ` · yFinance data as of ${emData.updated_et} ET` : '') + ` · ${tickers.join(', ')}`;
+  const old = document.title;
+  document.title = `FOCUS_Traders_EM_${stamp}`;
+  window.print();
+  setTimeout(() => { document.title = old; }, 500);
+  setStatus('✓ Print box opened — pick "Save as PDF".', 'success');
+}
+
 // ── Wire buttons ───────────────────────────────────────
 document.getElementById('btnFetchAll').addEventListener('click', fetchAll);
 document.getElementById('btnAddRow').addEventListener('click', () => { addTickerRow(); saveState(); });
@@ -1729,8 +1708,12 @@ document.getElementById('btnImportJSON').addEventListener('click', importJSON);
 document.getElementById('btnClearAll').addEventListener('click', clearAll);
 
 // ── Init ───────────────────────────────────────────────
-checkServer();
 loadState();
+checkServer().then(() => {
+  // Online: no date picked yet -> start on the week the hourly data covers
+  if (!serverOnline && emData && !selectedFriday) calSetDate(emData.base_friday);
+  if (!serverOnline && emData) setStatus(`Online data ready (yFinance, ${emData.updated_et} ET) — click Fetch All Data`, 'idle');
+});
 </script>
 </body>
 </html>
