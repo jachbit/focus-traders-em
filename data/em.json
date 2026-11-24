@@ -1,5 +1,5 @@
 {
- "updated_et": "2026-11-23 20:10",
+ "updated_et": "2026-11-24 18:14",
  "base_friday": "2026-11-20",
  "fridays": [
   "2026-11-20",
@@ -46,11 +46,11 @@
  "rows": {
   "^SPX": {
    "company": "S&P 500 Index",
-   "em": 0.327,
-   "iv": 0.0005,
+   "em": 0.166,
+   "iv": 0.0003,
    "expiry": "2026-11-27",
-   "atm_strike": 7235.0,
-   "current_price": 7237.17,
+   "atm_strike": 7200.0,
+   "current_price": 7201.09,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -71,11 +71,11 @@
   },
   "SPY": {
    "company": "SPDR S&P 500 ETF",
-   "em": 16.869,
-   "iv": 0.2576,
+   "em": 12.426,
+   "iv": 0.1907,
    "expiry": "2026-11-27",
-   "atm_strike": 722.0,
-   "current_price": 722.29,
+   "atm_strike": 719.0,
+   "current_price": 718.78,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -96,11 +96,11 @@
   },
   "QQQ": {
    "company": "Invesco QQQ Trust",
-   "em": 22.024,
-   "iv": 0.3731,
+   "em": 17.13,
+   "iv": 0.2961,
    "expiry": "2026-11-27",
-   "atm_strike": 651.0,
-   "current_price": 651.03,
+   "atm_strike": 638.0,
+   "current_price": 638.1,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -159,11 +159,11 @@
   },
   "TSLA": {
    "company": "Tesla, Inc.",
-   "em": 18.461,
-   "iv": 0.5283,
+   "em": 15.081,
+   "iv": 0.4324,
    "expiry": "2026-11-27",
    "atm_strike": 385.0,
-   "current_price": 385.46,
+   "current_price": 384.68,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -184,11 +184,11 @@
   },
   "NVDA": {
    "company": "NVIDIA Corporation",
-   "em": 12.814,
-   "iv": 0.8563,
+   "em": 9.587,
+   "iv": 0.6805,
    "expiry": "2026-11-27",
-   "atm_strike": 165.0,
-   "current_price": 165.05,
+   "atm_strike": 155.0,
+   "current_price": 155.38,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -209,11 +209,11 @@
   },
   "BMNR": {
    "company": "Bitmine Immersion Technologies, Inc.",
-   "em": 1.358,
-   "iv": 1.0391,
+   "em": 1.011,
+   "iv": 0.8457,
    "expiry": "2026-11-27",
-   "atm_strike": 14.5,
-   "current_price": 14.42,
+   "atm_strike": 13.0,
+   "current_price": 13.18,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -234,11 +234,11 @@
   },
   "BULL": {
    "company": "Webull Corporation",
-   "em": 0.29,
-   "iv": 0.7188,
+   "em": 0.222,
+   "iv": 0.5859,
    "expiry": "2026-11-27",
-   "atm_strike": 4.5,
-   "current_price": 4.45,
+   "atm_strike": 4.0,
+   "current_price": 4.17,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -259,11 +259,11 @@
   },
   "CNC": {
    "company": "Centene Corporation",
-   "em": 3.24,
-   "iv": 0.5645,
+   "em": 3.119,
+   "iv": 0.5347,
    "expiry": "2026-11-27",
    "atm_strike": 64.0,
-   "current_price": 63.32,
+   "current_price": 64.35,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -284,11 +284,11 @@
   },
   "NVO": {
    "company": "Novo Nordisk A/S",
-   "em": 1.265,
-   "iv": 0.3565,
+   "em": 1.039,
+   "iv": 0.2842,
    "expiry": "2026-11-27",
-   "atm_strike": 39.0,
-   "current_price": 39.14,
+   "atm_strike": 40.5,
+   "current_price": 40.31,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -309,11 +309,11 @@
   },
   "SG": {
    "company": "Sweetgreen, Inc.",
-   "em": 0.661,
-   "iv": 0.5977,
+   "em": 0.704,
+   "iv": 0.6426,
    "expiry": "2026-11-27",
    "atm_strike": 12.0,
-   "current_price": 12.2,
+   "current_price": 12.09,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -334,11 +334,11 @@
   },
   "ZETA": {
    "company": "Zeta Global Holdings Corp.",
-   "em": 2.199,
-   "iv": 0.748,
+   "em": 1.74,
+   "iv": 0.6035,
    "expiry": "2026-11-27",
-   "atm_strike": 32.5,
-   "current_price": 32.43,
+   "atm_strike": 32.0,
+   "current_price": 31.81,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -359,11 +359,11 @@
   },
   "PLTR": {
    "company": "Palantir Technologies Inc.",
-   "em": 9.735,
-   "iv": 0.6738,
+   "em": 7.991,
+   "iv": 0.5469,
    "expiry": "2026-11-27",
    "atm_strike": 160.0,
-   "current_price": 159.36,
+   "current_price": 161.18,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -384,11 +384,11 @@
   },
   "SOFI": {
    "company": "SoFi Technologies, Inc.",
-   "em": 0.753,
-   "iv": 0.6348,
+   "em": 0.583,
+   "iv": 0.5,
    "expiry": "2026-11-27",
    "atm_strike": 13.0,
-   "current_price": 13.09,
+   "current_price": 12.86,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -409,11 +409,11 @@
   },
   "RKLB": {
    "company": "Rocket Lab Corporation",
-   "em": 4.119,
-   "iv": 0.9155,
+   "em": 3.391,
+   "iv": 0.8135,
    "expiry": "2026-11-27",
-   "atm_strike": 49.5,
-   "current_price": 49.63,
+   "atm_strike": 46.0,
+   "current_price": 45.98,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -434,11 +434,11 @@
   },
   "HOOD": {
    "company": "Robinhood Markets, Inc.",
-   "em": 4.937,
-   "iv": 0.8084,
+   "em": 3.974,
+   "iv": 0.6677,
    "expiry": "2026-11-27",
-   "atm_strike": 67.0,
-   "current_price": 67.37,
+   "atm_strike": 66.0,
+   "current_price": 65.65,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -459,11 +459,11 @@
   },
   "USAR": {
    "company": "USA Rare Earth, Inc.",
-   "em": 0.745,
-   "iv": 1.1699,
+   "em": 0.549,
+   "iv": 0.9063,
    "expiry": "2026-11-27",
-   "atm_strike": 7.0,
-   "current_price": 7.02,
+   "atm_strike": 6.5,
+   "current_price": 6.68,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -484,11 +484,11 @@
   },
   "PL": {
    "company": "Planet Labs PBC",
-   "em": 0.689,
-   "iv": 0.6777,
+   "em": 0.865,
+   "iv": 0.8965,
    "expiry": "2026-11-27",
-   "atm_strike": 11.0,
-   "current_price": 11.21,
+   "atm_strike": 10.5,
+   "current_price": 10.64,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -509,11 +509,11 @@
   },
   "INTC": {
    "company": "Intel Corporation",
-   "em": 4.859,
-   "iv": 0.8984,
+   "em": 3.897,
+   "iv": 0.7844,
    "expiry": "2026-11-27",
-   "atm_strike": 60.0,
-   "current_price": 59.66,
+   "atm_strike": 55.0,
+   "current_price": 54.8,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -534,11 +534,11 @@
   },
   "TECK": {
    "company": "Teck Resources Limited",
-   "em": 2.945,
-   "iv": 0.6211,
+   "em": 3.052,
+   "iv": 0.667,
    "expiry": "2026-11-27",
-   "atm_strike": 52.0,
-   "current_price": 52.3,
+   "atm_strike": 50.0,
+   "current_price": 50.47,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -559,11 +559,11 @@
   },
   "MP": {
    "company": "MP Materials Corp.",
-   "em": 2.406,
-   "iv": 0.7466,
+   "em": 2.076,
+   "iv": 0.6377,
    "expiry": "2026-11-27",
-   "atm_strike": 35.5,
-   "current_price": 35.54,
+   "atm_strike": 36.0,
+   "current_price": 35.91,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -584,11 +584,11 @@
   },
   "LULU": {
    "company": "lululemon athletica inc.",
-   "em": 4.627,
-   "iv": 0.4878,
+   "em": 3.929,
+   "iv": 0.4087,
    "expiry": "2026-11-27",
-   "atm_strike": 105.0,
-   "current_price": 104.63,
+   "atm_strike": 106.0,
+   "current_price": 106.05,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -609,11 +609,11 @@
   },
   "JOBY": {
    "company": "Joby Aviation, Inc.",
-   "em": 0.327,
-   "iv": 0.9375,
+   "em": 0.261,
+   "iv": 0.8203,
    "expiry": "2026-11-27",
-   "atm_strike": 4.0,
-   "current_price": 3.85,
+   "atm_strike": 3.5,
+   "current_price": 3.51,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
@@ -634,11 +634,11 @@
   },
   "ACHR": {
    "company": "Archer Aviation Inc.",
-   "em": 0.261,
-   "iv": 0.9375,
+   "em": 0.22,
+   "iv": 0.8438,
    "expiry": "2026-11-27",
    "atm_strike": 3.0,
-   "current_price": 3.07,
+   "current_price": 2.88,
    "mmm": 0,
    "earnings_date": null,
    "fridays": {
